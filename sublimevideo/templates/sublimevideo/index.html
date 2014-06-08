@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyTV</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdn.sublimevideo.net/js/v329q4ds.js"></script>
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static "sublimevideo/js/playlist.js" %}" ></script>
+    <link rel="stylesheet" type="text/css" href="{% static "sublimevideo/css/index.css" %}"/>
+  </head>
+  <body>
+  <div id="playlist1" class="sv_playlist">
+    {% for videoid in videoids %}
+    <div class="video_wrap">
+      <video id="{{videoid}}" width="640" height="360" data-uid="{{videoid}}" data-youtube-id="{{videoid}}" preload="none" data-autoresize="fit"></video>
+    </div>
+    {% endfor %}
+  <ul class="thumbs">
+    {% for videoid in videoids %}
+    <li id="thumbnail_{{videoid}}">
+      <a href="">
+        <img alt="Thumbnail {{forloop.counter}}" src="http://img.youtube.com/vi/{{videoid}}/default.jpg" />
+        <span class="play" />
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  </div>
+  </body>
+</html>
