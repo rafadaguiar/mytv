@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 
 from django.core.wsgi import get_wsgi_application
 import os
+# MUST come before the bellow import!!!
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mytv.settings")
 
 from dj_static import Cling

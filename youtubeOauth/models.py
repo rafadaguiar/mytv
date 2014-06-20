@@ -14,8 +14,8 @@ from oauth2client.tools import argparser, run_flow
 # The CLIENT_SECRETS_FILE variable specifies the name of a file that contains
 # the OAuth 2.0 information for this application, including its client_id and
 # client_secret. You can acquire an OAuth 2.0 client ID and client secret from
-# the {{ Google Cloud Console }} at
-# {{ https://cloud.google.com/console }}.
+# the Google Developers Console at
+# https://console.developers.google.com/.
 # Please ensure that you have enabled the YouTube Data API for your project.
 # For more information about using OAuth2 to access the YouTube Data API, see:
 #   https://developers.google.com/youtube/v3/guides/authentication
@@ -39,8 +39,8 @@ found at:
 
    %s
 
-with information from the {{ Cloud Console }}
-{{ https://cloud.google.com/console }}
+with information from the Developers Console
+https://console.developers.google.com/
 
 For more information about the client_secrets.json file format, please visit:
 https://developers.google.com/api-client-library/python/guide/aaa_client_secrets
@@ -65,29 +65,25 @@ def get_authenticated_service(args):
 
 # This method calls the API's youtube.subscriptions.insert method to add a
 # subscription to the specified channel.
-def list_user_channels(youtube, channel_id):
-    user_channels = youtube.subscriptions().list(
-        part='snippet',
-        body=dict(
-            snippet=dict(
-                resourceId=dict(
-                    channelId=channel_id
-                )
-            )
-        )).execute()
+def list_my_subscriptions(youtube):
+    my_subscriptions = youtube.subscriptions().list(part='snippet', mine=True, order='alphabetical').execute()
+    total = my_subscriptions['pageInfo']['totalResults']
+    channels_list = []
+    for sub in my_subscriptions['items']:
+        channels_list.append((sub['snippet']['resourceId']['channelId'], sub['snippet']['title']))
 
-    return user_channels
+    return total, channels_list
 
 if __name__ == "__main__":
-    argparser.add_argument(
-        "--channel-id", help="ID of the channel to subscribe to.",
-        default="UCtVd0c0tGXuTSbU5d8cSBUg")
     args = argparser.parse_args()
-
     youtube = get_authenticated_service(args)
+
     try:
-        channel_title = list_user_channels(youtube, args.channel_id)
+        total, channels_list = list_my_subscriptions(youtube)
     except HttpError, e:
         print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
     else:
-        print "A subscription to '%s' was added." % channel_title
+        my_subscriptions_ids = [channel[0] for channel in channels_list]
+        my_subscriptions_titles = [channel[1] for channel in channels_list]
+        print "Here is the list of the %d ids of the channels that I subscribed to: '%s' " % (total, my_subscriptions_ids)
+        print my_subscriptions_titles
