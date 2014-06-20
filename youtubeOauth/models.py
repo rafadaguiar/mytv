@@ -63,27 +63,33 @@ def get_authenticated_service(args):
                  http=credentials.authorize(httplib2.Http()))
 
 
-# This method calls the API's youtube.subscriptions.insert method to add a
-# subscription to the specified channel.
-def list_my_subscriptions(youtube):
-    my_subscriptions = youtube.subscriptions().list(part='snippet', mine=True, order='alphabetical').execute()
-    total = my_subscriptions['pageInfo']['totalResults']
-    channels_list = []
-    for sub in my_subscriptions['items']:
-        channels_list.append((sub['snippet']['resourceId']['channelId'], sub['snippet']['title']))
+# This method calls the API's youtube.subscriptions.list method to list all the
+# subscriptions for a given user.
+def get_user_channels(youtube):
+    request = youtube.subscriptions().list(part='snippet', mine=True, order='alphabetical')
+    subscriptions = []
+    while request:
+        response = request.execute()
+        subscriptions.append(response)
+        request = youtube.subscriptions().list_next(request, response)
 
-    return total, channels_list
+    channels = {}
+    for subscription in subscriptions:
+        for channel in subscription['items']:
+            channel_title = channel['snippet']['title']
+            channel_id = channel['snippet']['resourceId']['channelId']
+            channels[channel_title] = channel_id
+
+    return channels
 
 if __name__ == "__main__":
     args = argparser.parse_args()
     youtube = get_authenticated_service(args)
 
     try:
-        total, channels_list = list_my_subscriptions(youtube)
+        channels = get_user_channels(youtube)
     except HttpError, e:
         print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
     else:
-        my_subscriptions_ids = [channel[0] for channel in channels_list]
-        my_subscriptions_titles = [channel[1] for channel in channels_list]
-        print "Here is the list of the %d ids of the channels that I subscribed to: '%s' " % (total, my_subscriptions_ids)
-        print my_subscriptions_titles
+        print "Here is the list of the %d ids of the channels that I subscribed to: '%s' " % (len(channels), channels.values())
+        print channels.keys()
