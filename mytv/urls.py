@@ -6,6 +6,6 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^blog/', include('blog.urls')),
-    url(r'^sublimevideo/', include('sublimevideo.urls')),
+    url(r'^home/', include('playlistGen.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

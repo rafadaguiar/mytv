@@ -1,1 +1,1 @@
-web: gunicorn mytv.wsgi
+web: gunicorn mytv.wsgi --pid=gunicorn.pid

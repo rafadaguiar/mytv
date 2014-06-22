@@ -1,4 +1,6 @@
 Django==1.6.5
+PyYAML==3.11
+argh==0.24.1
 distribute==0.6.28
 dj-database-url==0.3.0
 dj-static==0.0.5
@@ -6,7 +8,9 @@ django-toolbelt==0.0.1
 google-api-python-client==1.2
 gunicorn==18.0
 httplib2==0.9
+pathtools==0.1.2
 psycopg2==2.5.3
 pystache==0.5.4
 static==1.0.2
+watchdog==0.7.1
 wsgiref==0.1.2

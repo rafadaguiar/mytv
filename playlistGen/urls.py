@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from sublimevideo import views
+from playlistGen import views
 
 
 urlpatterns = [

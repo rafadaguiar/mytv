@@ -91,5 +91,5 @@ if __name__ == "__main__":
     except HttpError, e:
         print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
     else:
-        print "Here is the list of the %d ids of the channels that I subscribed to: '%s' " % (len(channels), channels.values())
-        print channels.keys()
+        # print "Here is the list of the %d ids of the channels that I subscribed to: '%s' " % (len(channels), channels.values())
+        print channels
