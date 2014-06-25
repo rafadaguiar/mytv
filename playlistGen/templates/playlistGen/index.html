@@ -10,16 +10,16 @@
   </head>
   <body>
   <div id="playlist1" class="sv_playlist">
-    {% for videoid in videoids %}
+    {% for video in videos %}
     <div class="video_wrap">
-      <video id="{{videoid}}" width="640" height="360" data-uid="{{videoid}}" data-youtube-id="{{videoid}}" preload="none" data-autoresize="fit"></video>
+      <video id="{{video.id}}" width="640" height="360" data-uid="{{video.id}}" data-youtube-id="{{video.id}}" preload="none" data-autoresize="fit"></video>
     </div>
     {% endfor %}
   <ul class="thumbs">
-    {% for videoid in videoids %}
-    <li id="thumbnail_{{videoid}}">
-      <a href="">
-        <img alt="Thumbnail {{forloop.counter}}" src="http://img.youtube.com/vi/{{videoid}}/default.jpg" />
+    {% for video in videos %}
+    <li id="thumbnail_{{video.id}}">
+      <a title="{{video.title}} ::: {{video.channelTitle}}" href="">
+        <img  alt="Thumbnail {{forloop.counter}}" src="http://img.youtube.com/vi/{{video.id}}/default.jpg" />
         <span class="play" />
       </a>
     </li>

@@ -4,9 +4,9 @@ from playlistGen.models import Playlist
 
 def index(request):
     pf = Playlist()
-    videoids = pf.latest()
+    videos = pf.latest()
     context = {'url-list': ['www'],
-               'videoids': videoids
+               'videos': videos
                }
     return render(request, 'playlistGen/index.html', context)
 

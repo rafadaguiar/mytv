@@ -6,6 +6,14 @@ import json
 from string import Template
 
 
+class Video(object):
+    def __init__(self, item):
+        self.id = item['id']['videoId']
+        self.title = item['snippet']['title']
+        self.channelId = item['snippet']['channelId']
+        self.channelTitle = item['snippet']['channelTitle']
+
+
 class Playlist(object):
 
     """
@@ -16,30 +24,28 @@ class Playlist(object):
     def __init__(self):
         self.user_channels = YoutubeRequest().proto_get_user_channels()
 
-    # Receive a channel and return its latest video available.
+    # Receive all channels and return its latest video available.
     def latest(self):
         video_ids = []
         for channelId in self.user_channels.values():
             param = urllib.urlencode(
                 dict(
-                    part='id',
+                    part='snippet',
                     channelId=channelId,
                     order='date',
+                    type='video',
                     key='AIzaSyDxwFXVDTlO4JXkX0_NS6HwX28DikeEUyQ'
                 )
             )
             url = "https://www.googleapis.com/youtube/v3/search?%s" % param
             response = json.loads(urllib2.urlopen(url).read())
+            video_ids.append(Video(response['items'][0]))
 
-            for item in response['items']:
-                if item['id']['kind'] == 'youtube#video':
-                    video_ids.append(item['id']['videoId'])
-                    break
         return video_ids
 
 
 class YoutubeRequest(object):
-
+    # TODO: Fix the oauth api to make this actually get called
     def __init__(self):
         pass
         # self.youtube = get_authenticated_service()
